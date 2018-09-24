@@ -66,7 +66,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        // Set the view's delegate
+        // Set the view's delegate.
         sceneView.delegate = self
         
         sceneView.autoenablesDefaultLighting = true
