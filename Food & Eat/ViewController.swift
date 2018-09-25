@@ -10,13 +10,12 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
    
-    
+    // UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate
 
     @IBOutlet var sceneView: ARSCNView!
     var collectionView: UICollectionView!
-
     
     let configuration = ARImageTrackingConfiguration()
     let augmentedRealitySession = ARSession()
@@ -48,7 +47,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     lazy var treeNode: SCNNode = {
         guard let scene = SCNScene(named: "art.scnassets/ship.scn"),
             let node = scene.rootNode.childNode(withName: "ship", recursively: false) else { return SCNNode() }
-        let scaleFactor = 0.0003
+        let scaleFactor = 0.0002
         node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
         node.position = SCNVector3(-0.035, 0, 0)
         node.eulerAngles.x = .pi / 2
@@ -63,8 +62,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         super.viewDidLoad()
         
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
         
         // Set the view's delegate
         sceneView.delegate = self
@@ -72,7 +71,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         sceneView.autoenablesDefaultLighting = true
         let ARScene = SCNScene()
         sceneView.scene = ARScene
-        
+        sceneView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,33 +131,35 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
 //            print(imageName)
 //
 //
-//            if imageName == "menu"{
-            let rotationAsRadian = CGFloat(GLKMathDegreesToRadians(360))
+//            if imageName == "Oyster1"{
+            _ = CGFloat(GLKMathDegreesToRadians(360))
 
         
-                // Check To See The Detected Size Of Our Menu Card (Should By 18cm*27cm)
-                let menuCardWidth = imageAnchor.referenceImage.physicalSize.width
-                let menuCardHeight =  imageAnchor.referenceImage.physicalSize.height
+                // Check To See The Detected Size Of Our Oyster1 Card (Should By 18cm*27cm)
+                let Oyster1CardWidth = imageAnchor.referenceImage.physicalSize.width
+                let Oyster1CardHeight =  imageAnchor.referenceImage.physicalSize.height
                 
                 print(
                     """
-                    We Have Detected menu Card With Name \(imageName)
-                    \(imageName)'s Width Is \(menuCardWidth)
-                    \(imageName)'s Height Is \(menuCardHeight)
+                    We Have Detected Oyster1 Card With Name \(imageName)
+                    \(imageName)'s Width Is \(Oyster1CardWidth)
+                    \(imageName)'s Height Is \(Oyster1CardHeight)
                     """)
                 
-                let plane = SCNPlane(width: menuCardWidth, height: menuCardHeight)
+                let plane = SCNPlane(width: Oyster1CardWidth, height: Oyster1CardHeight)
                 plane.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.75)
                 
                 let planeNode = SCNNode(geometry: plane)
                 planeNode.eulerAngles.x = -.pi / 2
-                planeNode.runAction(SCNAction.moveBy(x:  0, y: 0, z: 0, duration: 0))
+                planeNode.runAction(SCNAction.moveBy(x:  -1.0, y: 0, z: 0, duration: 0))
                 
  
                 // TODO: Overlay 3D Object
-//                let overlayNode = self.getNode(withImageName: imageName)
-//                print("overlay::\(overlayNode)")
-//                node.addChildNode(overlayNode)
+                let overlayNode = self.getNode(withImageName: imageName)
+                print("overlay::\(overlayNode)")
+                overlayNode.position = SCNVector3(-0.035, 0, 0)
+                node.addChildNode(overlayNode)
+            
             
             
             
@@ -330,8 +331,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 f_lableNode.eulerAngles.x = -.pi / 2
                 f_lableNode.runAction(SCNAction.moveBy(x: 0.125, y: 0, z: 0.117, duration: 0))
                 
-                
-                
                 //2
                 //image center
                 let f_image1Plane_1 = SCNPlane(width: 0.045, height: 0.03)
@@ -417,7 +416,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     func getNode(withImageName name: String) -> SCNNode {
         var node = SCNNode()
         switch name {
-        case "menu":
+        case "Oyster1":
             node = treeNode
         default:
             break
@@ -433,12 +432,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     //collection view
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
-    }
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+//        let cell = UICollectionViewCell()
+//
+//        return cell
+//
+//    }
     
 }//class
