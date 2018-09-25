@@ -10,19 +10,31 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
    
     
 
     @IBOutlet var sceneView: ARSCNView!
     var collectionView: UICollectionView!
+    var cellId = "Cell"
+
+    var planeBool: Bool = true
+    var planeNode0: SCNNode? = nil
+    var planeNode1: SCNNode? = nil
+    var planeNode2: SCNNode? = nil
 
     
     let configuration = ARImageTrackingConfiguration()
     let augmentedRealitySession = ARSession()
     var targetAnchor: ARImageAnchor?
+    var rendererImage: SCNRenderer?
     var headingView: UIView?
-    
+    let imageAnchor2 : ARAnchor? = nil
+
+    var lableNode: SCNNode? = nil
+    var AllLabelNode: SCNNode? = nil
+    var fruitNode: SCNNode? = nil
+    var nodess: SCNNode? = nil
     
     let fadeDuration: TimeInterval = 0.3
     let rotateDuration: TimeInterval = 3
@@ -50,21 +62,58 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
             let node = scene.rootNode.childNode(withName: "ship", recursively: false) else { return SCNNode() }
         let scaleFactor = 0.0003
         node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
-        node.position = SCNVector3(-0.035, 0, 0)
-        node.eulerAngles.x = .pi / 2
-        node.eulerAngles.y = .pi / 2
-        node.eulerAngles.z = .pi / 2
+        node.position = SCNVector3(-0.037, 0.15, 0)
+        node.eulerAngles.x = -.pi/2
+        node.eulerAngles.y = .pi
+        node.eulerAngles.z = .pi
         
 
         return node
     }()
     
+    lazy var treeNode1: SCNNode = {
+        guard let scene = SCNScene(named: "art.scnassets/chicken.scn"),
+            let node = scene.rootNode.childNode(withName: "chicken", recursively: false) else { return SCNNode() }
+        let scaleFactor = 0.003
+        node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
+        node.position = SCNVector3(0.0, 0.08, 0)
+        node.eulerAngles.x = -.pi/2
+        node.eulerAngles.y = .pi
+        node.eulerAngles.z = .pi
+        
+        
+        return node
+    }()
+    lazy var treeNode2: SCNNode = {
+        guard let scene = SCNScene(named: "art.scnassets/fruit.scn"),
+            let node = scene.rootNode.childNode(withName: "chicken", recursively: false) else { return SCNNode() }
+        let scaleFactor = 0.003
+        node.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
+        node.position = SCNVector3(-0.03, 0.08, 0)
+        node.eulerAngles.x = -.pi/2
+        node.eulerAngles.y = .pi
+        node.eulerAngles.z = .pi
+        
+        
+        return node
+    }()
+    
+    let newCollection: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+
+        let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: 200, height: 50), collectionViewLayout: layout)
+        collection.backgroundColor = UIColor.gray.withAlphaComponent(0)
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.isScrollEnabled = true
+        return collection
+    }()
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
+
         
         // Set the view's delegate.
         sceneView.delegate = self
@@ -116,23 +165,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         
-//        var modelNode = SCNNode?
         DispatchQueue.main.async {
             guard let imageAnchor = anchor as? ARImageAnchor,
                 let imageName = imageAnchor.referenceImage.name else { return }
- 
-            
-//            self.label.text = "Image detected: \"\(imageName)\""
-        
-        
-//        guard let imageAnchor = anchor as? ARImageAnchor else {return}
-//
-//        if let imageName  = imageAnchor.referenceImage.name {
-//
-//            print(imageName)
-//
-//
-//            if imageName == "menu"{
+
             let rotationAsRadian = CGFloat(GLKMathDegreesToRadians(360))
 
         
@@ -151,9 +187,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 plane.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.75)
                 
                 let planeNode = SCNNode(geometry: plane)
-                planeNode.eulerAngles.x = -.pi / 2
-                planeNode.runAction(SCNAction.moveBy(x:  0, y: 0, z: 0, duration: 0))
-                
+                planeNode.eulerAngles.x = -.pi / 4
+                planeNode.runAction(SCNAction.moveBy(x:  0, y: 0, z: 0, duration: 0.75))
+            
+ 
+   
+  
+            
  
                 // TODO: Overlay 3D Object
 //                let overlayNode = self.getNode(withImageName: imageName)
@@ -168,8 +208,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 //BREAKFAST, FALTBREADS, SANDWICHES, ALLDAY
                 let labelPlane = SCNPlane(width: 0.065, height: 0.015)
                 labelPlane.firstMaterial?.diffuse.contents = UIImage(named: "BREAKFAST")
-               
+            
                 let lableNode = SCNNode(geometry: labelPlane)
+                self.lableNode = lableNode
+                lableNode.name = "lableNode"
                 lableNode.eulerAngles.x = -.pi / 2
                 lableNode.runAction(SCNAction.moveBy(x: 0.2, y: 0, z: -0.125, duration: 0))
                 //1
@@ -232,8 +274,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 /******************All day dining*******************/
                 let h_labelPlane = SCNPlane(width: 0.065, height: 0.015)
                 h_labelPlane.firstMaterial?.diffuse.contents = UIImage(named: "ALLDAY")
-                
+           
                 let h_lableNode = SCNNode(geometry: h_labelPlane)
+                self.AllLabelNode = h_lableNode
+                h_lableNode.name = "AllLabelNode"
                 h_lableNode.eulerAngles.x = -.pi / 2
                 h_lableNode.runAction(SCNAction.moveBy(x: 0.2, y: 0, z: -0.04, duration: 0))
                 
@@ -308,6 +352,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 h_labelPlane2.firstMaterial?.diffuse.contents = UIImage(named: "FALTBREADS")
                 
                 let h_lableNode2 = SCNNode(geometry: h_labelPlane2)
+                self.fruitNode = h_lableNode2
+                h_lableNode2.name = "fruitNode"
                 h_lableNode2.eulerAngles.x = -.pi / 2
                 h_lableNode2.runAction(SCNAction.moveBy(x: 0.125, y: 0, z: 0.06, duration: 0))
                 
@@ -372,7 +418,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
                 
                 /********************************************************/
                 
-                node.addChildNode(overlayNode)
+//                node.addChildNode(overlayNode)
 //                node.addChildNode(planeNode)
                 //breakfast node
                 node.addChildNode(lableNode)
@@ -419,26 +465,155 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate, UI
         switch name {
         case "menu":
             node = treeNode
+        case "menu1":
+            
+            node = treeNode1
+            
+        case "menu2":
+            
+            node = treeNode2
+            
         default:
             break
         }
         return node
     }
 
-    func addSceneToScene() {
-        let geoScene = SCNScene(named: "art.scnassets/cake.dae")
-        self.sceneView.scene.rootNode.addChildNode((geoScene?.rootNode.childNode(withName: "cake", recursively: true)!)!)
+
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        //1. Get The Current Touch Location & Perform An ARSCNHitTest To Check For Any Hit SCNNode's
+        guard let currentTouchLocation = touches.first?.location(in: self.sceneView),
+            let hitTestNode = self.sceneView.hitTest(currentTouchLocation, options: nil).first?.node else { return }
+        
+        
+        if let lableName = hitTestNode.name {
+            print("touch working")
+            if lableName == "lableNode"{
+                
+                
+                makeCakeOnNode(hitTestNode)
+                
+  
+                
+            } else if lableName == "AllLabelNode" {
+                
+                makeCakeOnNode1(hitTestNode)
+                
+            } else if lableName == "fruitNode" {
+                
+                makeCakeOnNode2(hitTestNode)
+                
+            }
+            
+        }
+    }
+  
+    
+    func makeCakeOnNode(_ node: SCNNode){
+        
+        let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        
+        planeNode0 = SCNNode(geometry: planeGeometry)
+        planeNode0?.runAction(SCNAction.moveBy(x: -0.2, y: -0.15, z: 0, duration: 0))
+
+                        let overlayNode = self.getNode(withImageName: "menu")
+                        print("overlay::\(overlayNode)")
+        
+        node.addChildNode(planeNode0!)
+        planeNode0?.addChildNode(overlayNode)
+        
+        if planeBool == true {
+            
+            planeNode1?.isHidden = true
+            planeNode2?.isHidden = true
+            planeNode0?.isHidden = false
+            planeBool = false
+            
+        } else {
+            
+            print("plane removed")
+            planeNode0?.isHidden = true
+            planeNode1?.isHidden = true
+            planeNode2?.isHidden = true
+            
+            planeBool = true
+        }
+        
+   
     }
     
-    
-    //collection view
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
+    func makeCakeOnNode1(_ node: SCNNode){
+        
+        let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        
+        planeNode1 = SCNNode(geometry: planeGeometry)
+        planeNode1?.runAction(SCNAction.moveBy(x: -0.2, y: -0.05, z: 0, duration: 0))
+        
+        let overlayNode = self.getNode(withImageName: "menu1")
+        print("overlay::\(overlayNode)")
+        node.addChildNode(planeNode1!)
+        planeNode1?.addChildNode(overlayNode)
+        
+        if planeBool == true {
+            
+            planeNode0?.isHidden = true
+            planeNode1!.isHidden = false
+            planeNode2?.isHidden = true
+            planeBool = false
+            
+        } else {
+            
+            print("plane removed")
+            planeNode1!.isHidden = true
+            planeNode0?.isHidden = true
+            planeNode2?.isHidden = true
+            
+            planeBool = true
+        }
+        
+        
+        
     }
+  
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+    func makeCakeOnNode2(_ node: SCNNode){
+        
+        let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        
+        planeNode2 = SCNNode(geometry: planeGeometry)
+        planeNode2?.runAction(SCNAction.moveBy(x: -0.125, y: 0.03, z: 0, duration: 0))
+        
+        let overlayNode = self.getNode(withImageName: "menu2")
+        print("overlay::\(overlayNode)")
+        node.addChildNode(planeNode2!)
+        planeNode2?.addChildNode(overlayNode)
+        
+        if planeBool == true {
+            
+            planeNode0?.isHidden = true
+            planeNode2!.isHidden = false
+            planeNode1?.isHidden = true
+            planeBool = false
+            
+        } else {
+            
+            print("plane removed")
+            planeNode1!.isHidden = true
+            planeNode0?.isHidden = true
+            planeNode2?.isHidden = true
+            
+            planeBool = true
+        }
+        
+        
+        
     }
+   
     
 }//class
