@@ -515,7 +515,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func makeCakeOnNode(_ node: SCNNode){
         
         let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
-        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0)
+        
+
+        
         
         planeNode0 = SCNNode(geometry: planeGeometry)
         planeNode0?.runAction(SCNAction.moveBy(x: -0.2, y: -0.15, z: 0, duration: 0))
@@ -523,9 +527,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
                         let overlayNode = self.getNode(withImageName: "menu")
                         print("overlay::\(overlayNode)")
         
+        let newPlane = SCNPlane(width: 0.15, height: 0.10)
+        newPlane.firstMaterial?.diffuse.contents = UIImage(named: "cake_detail")
+        
+        let newPlaneNode = SCNNode(geometry: newPlane)
+        newPlaneNode.eulerAngles.x = -.pi / 2
+        newPlaneNode.runAction(SCNAction.moveBy(x: -0.2, y: -0.15, z: 0, duration: 0))
+        
         node.addChildNode(planeNode0!)
         planeNode0?.addChildNode(overlayNode)
-        
+        planeNode0?.addChildNode(newPlaneNode)
         if planeBool == true {
             
             planeNode1?.isHidden = true
@@ -549,7 +560,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func makeCakeOnNode1(_ node: SCNNode){
         
         let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
-        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0)
         
         planeNode1 = SCNNode(geometry: planeGeometry)
         planeNode1?.runAction(SCNAction.moveBy(x: -0.2, y: -0.05, z: 0, duration: 0))
@@ -584,7 +595,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func makeCakeOnNode2(_ node: SCNNode){
         
         let planeGeometry = SCNPlane(width: 0.18  , height: 0.15)
-        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0.5)
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.black.withAlphaComponent(0)
         
         planeNode2 = SCNNode(geometry: planeGeometry)
         planeNode2?.runAction(SCNAction.moveBy(x: -0.125, y: 0.03, z: 0, duration: 0))
