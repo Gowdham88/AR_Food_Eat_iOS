@@ -15,6 +15,7 @@
 		2AC7208721536901006DE7C9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AC7208521536901006DE7C9 /* LaunchScreen.storyboard */; };
 		2AC7209221536901006DE7C9 /* Food___EatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC7209121536901006DE7C9 /* Food___EatTests.swift */; };
 		2AC7209D21536901006DE7C9 /* Food___EatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC7209C21536901006DE7C9 /* Food___EatUITests.swift */; };
+		2AEA16512158AFCF00C1439F /* MyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEA16502158AFCF00C1439F /* MyCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		2AC7209821536901006DE7C9 /* Food & EatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Food & EatUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AC7209C21536901006DE7C9 /* Food___EatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Food___EatUITests.swift"; sourceTree = "<group>"; };
 		2AC7209E21536901006DE7C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2AEA16502158AFCF00C1439F /* MyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				2AC7208321536901006DE7C9 /* Assets.xcassets */,
 				2AC7208521536901006DE7C9 /* LaunchScreen.storyboard */,
 				2AC7208821536901006DE7C9 /* Info.plist */,
+				2AEA16502158AFCF00C1439F /* MyCollectionViewCell.swift */,
 			);
 			path = "Food & Eat";
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 			files = (
 				2AC7207F215368FE006DE7C9 /* ViewController.swift in Sources */,
 				2AC7207B215368FE006DE7C9 /* AppDelegate.swift in Sources */,
+				2AEA16512158AFCF00C1439F /* MyCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
